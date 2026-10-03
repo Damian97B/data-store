@@ -1,0 +1,87 @@
+openapi: 3.0.3
+info:
+  title: Data Store API
+  version: 1.0.0
+  x-api-id: data-store-api
+  x-audience: company-internal
+
+paths:
+  /engine-temperatures:
+    get:
+      operationId: listEngineTemperatures
+      summary: List engine temperatures
+      responses:
+        '200':
+          description: List of engine temperatures.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EngineTemperatureList'
+    post:
+      operationId: createEngineTemperature
+      summary: Create an engine temperature
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EngineTemperatureCreate'
+      responses:
+        '201':
+          description: Engine temperature created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EngineTemperature'
+
+  /engine-temperatures/{engine-temperature-id}:
+    get:
+      operationId: getEngineTemperature
+      summary: Get an engine temperature
+      parameters:
+        - name: engine-temperature-id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Engine temperature.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EngineTemperature'
+        '404':
+          description: Engine temperature not found.
+
+components:
+  schemas:
+    EngineTemperatureCreate:
+      type: object
+      required: [temperature]
+      properties:
+        temperature:
+          type: number
+          format: double
+
+    EngineTemperature:
+      type: object
+      required: [id, temperature, created_at]
+      properties:
+        id:
+          type: integer
+        temperature:
+          type: number
+          format: double
+        created_at:
+          type: string
+          format: date-time
+
+    EngineTemperatureList:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/EngineTemperature'
